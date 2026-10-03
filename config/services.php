@@ -2,6 +2,11 @@
 
 return [
 
+    'demo_payments_enabled' => env(
+        'DEMO_PAYMENTS_ENABLED',
+        in_array(env('APP_ENV'), ['local', 'testing'], true)
+    ),
+
     /*
     |--------------------------------------------------------------------------
     | Third Party Services

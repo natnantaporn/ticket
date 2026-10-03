@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
@@ -54,14 +55,14 @@ class AuthController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'phone' => ['required', 'string', 'max:20'],
-            'password' => ['required', 'string', 'min:6', 'confirmed'],
+            'password' => ['required', 'string', Password::min(12)->mixedCase()->numbers()->symbols(), 'confirmed'],
         ], [
             'name.required' => 'กรุณาระบุชื่อ-นามสกุล',
             'email.required' => 'กรุณาระบุอีเมล',
             'email.unique' => 'อีเมลนี้ถูกใช้งานแล้ว',
             'phone.required' => 'กรุณาระบุเบอร์โทรศัพท์',
             'password.required' => 'กรุณาระบุรหัสผ่าน',
-            'password.min' => 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร',
+            'password.min' => 'รหัสผ่านต้องมีอย่างน้อย 12 ตัวอักษร',
             'password.confirmed' => 'การยืนยันรหัสผ่านไม่ตรงกัน',
         ]);
 
@@ -74,6 +75,7 @@ class AuthController extends Controller
         ]);
 
         Auth::login($user);
+        $request->session()->regenerate();
 
         return redirect()->route('home')->with('success', 'ลงทะเบียนสำเร็จ ยินดีต้อนรับสู่ระบบจองตั๋ว!');
     }

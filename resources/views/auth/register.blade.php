@@ -69,7 +69,7 @@
                                id="password" 
                                name="password" 
                                class="form-control" 
-                               placeholder="อย่างน้อย 6 ตัว" 
+                               placeholder="อย่างน้อย 12 ตัว มีตัวพิมพ์ใหญ่/เล็ก ตัวเลข และสัญลักษณ์"
                                required>
                         @error('password')
                             <div class="form-error">{{ $message }}</div>

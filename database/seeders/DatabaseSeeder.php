@@ -19,6 +19,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        if (app()->isProduction()) {
+            return;
+        }
+
         // 1. Create Admin
         $admin = User::create([
             'name' => 'ผู้ดูแลระบบ (Admin)',

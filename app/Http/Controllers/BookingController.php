@@ -16,6 +16,12 @@ class BookingController extends Controller
 {
     public function store(Request $request)
     {
+        abort_unless(
+            config('services.demo_payments_enabled') && !app()->isProduction(),
+            503,
+            'Online payments are not configured.'
+        );
+
         $validated = $request->validate([
             'event_id' => ['required', 'exists:events,id'],
             'customer_name' => ['required', 'string', 'max:255'],
@@ -33,6 +39,10 @@ class BookingController extends Controller
         ]);
 
         $event = Event::findOrFail($validated['event_id']);
+
+        if ($event->status !== 'active' || $event->event_date->isPast()) {
+            return back()->with('error', 'ขออภัย งานนี้ปิดรับจองแล้ว')->withInput();
+        }
         
         // Filter ticket selections with quantity > 0
         $selectedTickets = array_filter($validated['tickets'], function ($qty) {
@@ -55,6 +65,10 @@ class BookingController extends Controller
                         throw new \Exception('ประเภทบัตรไม่ถูกต้องสำหรับงานนี้');
                     }
 
+                    if ($qty > $ticketType->max_per_order) {
+                        throw new \Exception("บัตร {$ticketType->name} จำกัดไม่เกิน {$ticketType->max_per_order} ใบต่อการจอง");
+                    }
+
                     if ($ticketType->available_quantity < $qty) {
                         throw new \Exception("ขออภัย บัตร {$ticketType->name} มีจำนวนคงเหลือไม่เพียงพอ (เหลือเพียง {$ticketType->available_quantity} ใบ)");
                     }
@@ -73,7 +87,7 @@ class BookingController extends Controller
                     }
                 }
 
-                $bookingCode = 'TK-' . strtoupper(Str::random(8));
+                $bookingCode = 'TK-' . strtoupper(Str::random(16));
                 $qrToken = 'QR-' . Str::uuid()->toString();
 
                 $booking = Booking::create([

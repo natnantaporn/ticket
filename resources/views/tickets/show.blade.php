@@ -28,12 +28,12 @@
     <!-- E-Tickets List -->
     @foreach($booking->items as $index => $item)
         <div class="ticket-pass-wrapper">
-            <div class="ticket-pass" style="border-top: 4px solid {{ $item->ticketType->color ?? '#6366f1' }};">
+            <div class="ticket-pass" @style(['border-top' => '4px solid '.($item->ticketType->color ?? '#6366f1')])>
                 <!-- Main Body -->
                 <div class="ticket-pass-main">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
                         <div>
-                            <span style="font-size: 0.75rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: {{ $item->ticketType->color ?? '#38bdf8' }};">
+                            <span @style(['font-size' => '0.75rem', 'font-weight' => '800', 'letter-spacing' => '1px', 'text-transform' => 'uppercase', 'color' => $item->ticketType->color ?? '#38bdf8'])>
                                 OFFICIAL E-TICKET PASS • ใบที่ {{ $index + 1 }}/{{ $booking->items->count() }}
                             </span>
                             <h2 style="font-size: 1.6rem; font-weight: 800; margin-top: 0.25rem;">
@@ -55,7 +55,7 @@
                         </div>
                         <div>
                             <span style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; font-weight: 600;">ประเภทบัตร / โซน</span>
-                            <p style="font-size: 1.1rem; font-weight: 700; color: {{ $item->ticketType->color ?? '#38bdf8' }}; margin-top: 0.15rem;">
+                            <p @style(['font-size' => '1.1rem', 'font-weight' => '700', 'color' => $item->ticketType->color ?? '#38bdf8', 'margin-top' => '0.15rem'])>
                                 {{ $item->ticketType->name }}
                             </p>
                         </div>
@@ -93,7 +93,7 @@
                         SCAN TO ENTER
                     </span>
 
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data={{ urlencode($item->ticket_code) }}" 
+                    <img src="{{ $ticketQrCodes[$item->id] }}"
                          alt="QR Code" 
                          class="ticket-qr-img">
 

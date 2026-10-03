@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\SvgWriter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,7 +22,6 @@ class TicketController extends Controller
 
         $bookings = Booking::with(['event', 'items.ticketType'])
             ->where('user_id', $user->id)
-            ->orWhere('customer_email', $user->email)
             ->latest()
             ->get();
 
@@ -30,14 +31,26 @@ class TicketController extends Controller
     /**
      * Show specific booking and printable E-Ticket
      */
-    public function show($bookingCode)
+    public function show(string $bookingCode)
     {
         $booking = Booking::with(['event', 'items.ticketType'])
             ->where('booking_code', $bookingCode)
             ->orWhere('qr_token', $bookingCode)
             ->firstOrFail();
 
-        return view('tickets.show', compact('booking'));
+        $qrWriter = new SvgWriter();
+        $ticketQrCodes = $booking->items->mapWithKeys(function ($item) use ($qrWriter) {
+            $qrCode = QrCode::create($item->ticket_code)
+                ->setSize(160)
+                ->setMargin(10);
+
+            return [$item->id => $qrWriter->write($qrCode)->getDataUri()];
+        });
+
+        return response()
+            ->view('tickets.show', compact('booking', 'ticketQrCodes'))
+            ->header('Cache-Control', 'no-store, private')
+            ->header('Pragma', 'no-cache');
     }
 
     /**
