@@ -16,22 +16,6 @@
                 </p>
             </div>
 
-            <!-- Quick Demo Login Hint -->
-            <div style="background: rgba(226, 192, 121, 0.08); border: 1px solid rgba(226, 192, 121, 0.25); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1.75rem; font-size: 0.85rem;">
-                <p style="font-weight: 700; color: var(--champagne-light); margin-bottom: 0.5rem;">
-                    <i data-lucide="sparkles" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle;"></i>
-                    บัญชีทดสอบด่วน (คลิกเพื่อกรอกอัตโนมัติ):
-                </p>
-                <div style="display: flex; gap: 0.5rem;">
-                    <button type="button" class="btn btn-secondary btn-sm" style="flex: 1; font-size: 0.78rem; padding: 0.3rem 0.5rem;" onclick="fillLogin('user@ticket.test', 'password123')">
-                        ผู้ใช้ทั่วไป (Demo)
-                    </button>
-                    <button type="button" class="btn btn-secondary btn-sm" style="flex: 1; font-size: 0.78rem; padding: 0.3rem 0.5rem;" onclick="fillLogin('admin@ticket.test', 'password123')">
-                        แอดมิน (Admin)
-                    </button>
-                </div>
-            </div>
-
             <form action="{{ route('login.submit') }}" method="POST">
                 @csrf
 
@@ -84,13 +68,4 @@
         </div>
     </div>
 </div>
-@endsection
-
-@section('scripts')
-<script>
-    function fillLogin(email, password) {
-        document.getElementById('email').value = email;
-        document.getElementById('password').value = password;
-    }
-</script>
 @endsection

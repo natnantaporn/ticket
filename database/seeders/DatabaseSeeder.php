@@ -26,10 +26,10 @@ class DatabaseSeeder extends Seeder
         // 1. Create Admin
         $admin = User::create([
             'name' => 'ผู้ดูแลระบบ (Admin)',
-            'email' => 'admin@ticket.test',
+            'email' => 'samachik@ticket.test',
             'phone' => '081-999-8888',
             'role' => 'admin',
-            'password' => Hash::make('password123'),
+            'password' => Hash::make('j3Lh2E-73K)hLoL'),
         ]);
 
         // 2. Create Demo User
@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'user@ticket.test',
             'phone' => '089-123-4567',
             'role' => 'user',
-            'password' => Hash::make('password123'),
+            'password' => Hash::make('j3Lh2E-73K)hLoL'),
         ]);
 
         // 3. Create Event
